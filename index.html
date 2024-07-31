@@ -2,101 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Nama</title>
+    <title>SAMP Hosting - Masukkan Nama</title>
     <style>
         body {
-            background-image: url('https://wallpaperaccess.com/full/396370.jpg'); /* Ganti dengan URL gambar anime favorit Anda */
-            background-size: cover;
-            color: white;
-            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
             text-align: center;
-            padding-top: 50px;
+            padding: 50px;
         }
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
+            color: #ffcc00;
         }
         form {
-            background-color: rgba(0, 0, 0, 0.7);
-            display: inline-block;
+            background-color: #333333;
             padding: 20px;
             border-radius: 10px;
+            display: inline-block;
         }
-        label {
+        label, input {
             display: block;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            margin: 10px 0;
         }
         input[type="text"] {
             padding: 10px;
-            width: 80%;
-            margin-bottom: 20px;
             border: none;
             border-radius: 5px;
+            width: 200px;
         }
         button {
-            padding: 10px 20px;
-            font-size: 1em;
-            background-color: #ff6b6b;
-            color: white;
+            background-color: #ffcc00;
+            color: #1a1a1a;
             border: none;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
-            background-color: #ff4757;
+            background-color: #e6b800;
         }
     </style>
-    <script>
-        function showAlert(name) {
-            alert(name + " BERHASIL DI WL SILAHKAN LOGIN");
-        }
-    </script>
 </head>
 <body>
-    <h1>Buat Nama Baru</h1>
-    <form action="add_name.php" method="POST">
+    <h1>SAMP Hosting - WHITE LIST</h1>
+    <form id="nameForm" method="post" action="">
         <label for="username">Nama:</label>
         <input type="text" id="username" name="username" required>
-        <button type="submit">Buat Nama</button>
+        <button type="submit">Submit</button>
     </form>
 
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'];
 
-        // Ganti dengan kredensial Lemehost Anda
-        $host = 'ftp.lemehost.com';
-        $ftpUsername = 'user_1040649.19df7c0b';
-        $ftpPassword = 'XIFVL0vD0RJYcJz475NUT9o3q4QWqBQ-';
-        $remoteFilePath = '/scriptfiles/whitelist/' . $username . '.txt';
+        // Database credentials
+        $servername = "144.76.57.59";
+        $dbname = "s2487585_db1722462467788";
+        $username_db = "u2487585_CrZMPJtXBS";
+        $password_db = "d=@Gcg=2222zkvvbIdt.48bc";
 
-        // Koneksi ke FTP server
-        $ftpConn = ftp_connect($host) or die("Could not connect to $host");
-        $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
+        // Create connection
+        $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 
-        if ($login) {
-            // Buat file sementara
-            $tempFile = tmpfile();
-            fwrite($tempFile, $username);
-            fseek($tempFile, 0);
-
-            // Upload file ke server
-            if (ftp_fput($ftpConn, $remoteFilePath, $tempFile, FTP_ASCII)) {
-                echo "<script>showAlert('$username');</script>";
-            } else {
-                echo "Error uploading $username";
-            }
-
-            // Tutup file sementara
-            fclose($tempFile);
-        } else {
-            echo "Could not log in to FTP server";
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
         }
 
-        // Tutup koneksi FTP
-        ftp_close($ftpConn);
+        // Insert username into database
+        $sql = "INSERT INTO accounts (username) VALUES ('$username')";
+        if ($conn->query($sql) === TRUE) {
+            echo '<p>Nama berhasil ditambahkan ke database.</p>';
+        } else {
+            echo '<p>Error: ' . $sql . '<br>' . $conn->error . '</p>';
+        }
+
+        // Close connection
+        $conn->close();
     }
     ?>
 </body>
