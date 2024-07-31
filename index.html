@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Nama Akun</title>
+    <title>Buat Nama</title>
     <style>
         body {
             background-image: url('https://wallpaperaccess.com/full/396370.jpg'); /* Ganti dengan URL gambar anime favorit Anda */
@@ -55,9 +55,9 @@
     </script>
 </head>
 <body>
-    <h1>Buat Nama Akun Baru</h1>
-    <form action="add_account.php" method="POST">
-        <label for="username">Nama Akun:</label>
+    <h1>Buat Nama Baru</h1>
+    <form action="add_name.php" method="POST">
+        <label for="username">Nama:</label>
         <input type="text" id="username" name="username" required>
         <button type="submit">Buat Nama</button>
     </form>
@@ -66,31 +66,37 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $username = $_POST['username'];
 
-        // Ganti dengan kredensial MySQL Anda
-        $servername = "23.88.73.88";
-        $dbname = "s2485756_db1722375110319";
-        $tablename = "accounts";
-        $dbusername = "u2485756_ZiKjgEvIxb";
-        $dbpassword = ".euVb+3OyvTxldt4I@Fb9.li";
+        // Ganti dengan kredensial Lemehost Anda
+        $host = 'ftp.lemehost.com';
+        $ftpUsername = 'user_1040649.19df7c0b';
+        $ftpPassword = 'XIFVL0vD0RJYcJz475NUT9o3q4QWqBQ-';
+        $remoteFilePath = '/home/scriptfiles/whitelist/' . $username . '.txt';
 
-        // Buat koneksi
-        $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+        // Koneksi ke FTP server
+        $ftpConn = ftp_connect($host) or die("Could not connect to $host");
+        $login = ftp_login($ftpConn, $ftpUsername, $ftpPassword);
 
-        // Periksa koneksi
-        if ($conn->connect_error) {
-            die("Koneksi gagal: " . $conn->connect_error);
-        }
+        if ($login) {
+            // Buat file sementara
+            $tempFile = tmpfile();
+            fwrite($tempFile, $username);
+            fseek($tempFile, 0);
 
-        // Siapkan dan jalankan query
-        $sql = "INSERT INTO $tablename (username) VALUES ('$username')";
-        if ($conn->query($sql) === TRUE) {
-            echo "<script>showAlert('$username');</script>";
+            // Upload file ke server
+            if (ftp_fput($ftpConn, $remoteFilePath, $tempFile, FTP_ASCII)) {
+                echo "<script>showAlert('$username');</script>";
+            } else {
+                echo "Error uploading $username";
+            }
+
+            // Tutup file sementara
+            fclose($tempFile);
         } else {
-            echo "Error: " . $sql . "<br>" . $conn->error;
+            echo "Could not log in to FTP server";
         }
 
-        // Tutup koneksi
-        $conn->close();
+        // Tutup koneksi FTP
+        ftp_close($ftpConn);
     }
     ?>
 </body>
