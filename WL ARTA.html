@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Nama Akun</title>
+    <style>
+        body {
+            background-image: url('https://wallpaperaccess.com/full/396370.jpg'); /* Ganti dengan URL gambar anime favorit Anda */
+            background-size: cover;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: rgba(0, 0, 0, 0.7);
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff4757;
+        }
+    </style>
+    <script>
+        function showAlert(name) {
+            alert(name + " BERHASIL DI WL SILAHKAN LOGIN");
+        }
+    </script>
+</head>
+<body>
+    <h1>Buat Nama Akun Baru</h1>
+    <form action="add_account.php" method="POST">
+        <label for="username">Nama Akun:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="submit">Buat Nama</button>
+    </form>
+
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $username = $_POST['username'];
+
+        // Ganti dengan kredensial MySQL Anda
+        $servername = "23.88.73.88";
+        $dbname = "s2485756_db1722375110319";
+        $tablename = "accounts";
+        $dbusername = "u2485756_ZiKjgEvIxb";
+        $dbpassword = ".euVb+3OyvTxldt4I@Fb9.li";
+
+        // Buat koneksi
+        $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
+
+        // Periksa koneksi
+        if ($conn->connect_error) {
+            die("Koneksi gagal: " . $conn->connect_error);
+        }
+
+        // Siapkan dan jalankan query
+        $sql = "INSERT INTO $tablename (username) VALUES ('$username')";
+        if ($conn->query($sql) === TRUE) {
+            echo "<script>showAlert('$username');</script>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
+
+        // Tutup koneksi
+        $conn->close();
+    }
+    ?>
+</body>
+</html>
