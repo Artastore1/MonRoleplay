@@ -2,82 +2,82 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SAMP Hosting - Masukkan Nama</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hosting</title>
     <style>
         body {
-            background-color: #1a1a1a;
-            color: #ffffff;
+            background-color: #2c3e50;
+            color: #ecf0f1;
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 50px;
+            padding-top: 50px;
         }
-        h1 {
-            color: #ffcc00;
-        }
-        form {
-            background-color: #333333;
-            padding: 20px;
-            border-radius: 10px;
-            display: inline-block;
-        }
-        label, input {
-            display: block;
-            margin: 10px 0;
+        .container {
+            margin: 0 auto;
+            width: 300px;
         }
         input[type="text"] {
+            width: 100%;
             padding: 10px;
-            border: none;
-            border-radius: 5px;
-            width: 200px;
+            margin: 10px 0;
         }
         button {
-            background-color: #ffcc00;
-            color: #1a1a1a;
-            border: none;
             padding: 10px 20px;
-            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            border: none;
             cursor: pointer;
         }
         button:hover {
-            background-color: #e6b800;
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <h1>SAMP Hosting - WHITE LIST</h1>
-    <form id="nameForm" method="post" action="">
-        <label for="username">Nama:</label>
-        <input type="text" id="username" name="username" required>
-        <button type="submit">Submit</button>
-    </form>
+    <div class="container">
+        <h1>REQ WHITELIST</h1>
+        <form id="nameForm" method="post">
+            <input type="text" id="username" name="username" placeholder="Enter your name" required>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('nameForm').addEventListener('submit', function(event) {
+            // Let the form submit normally if PHP processing is done server-side
+            event.preventDefault();
+            var form = event.target;
+            form.submit();
+        });
+    </script>
 
     <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $username = $_POST['username'];
-
-        // Database credentials
-        $servername = "144.76.57.59";
-        $dbname = "s2487585_db1722462467788";
-        $username_db = "u2487585_CrZMPJtXBS";
-        $password_db = "d=@Gcg=2222zkvvbIdt.48bc";
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $servername = "u2487585_Rh5Ee3XNfF";
+        $username = "u2487585_Rh5Ee3XNfF";
+        $password = "sKQPT4hgYAqMI^+3RI+OW@Be";
+        $dbname = "s2487585_db1722487655342";
 
         // Create connection
-        $conn = new mysqli($servername, $username_db, $password_db, $dbname);
+        $conn = new mysqli($servername, $username, $password, $dbname);
 
         // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Insert username into database
-        $sql = "INSERT INTO accounts (username) VALUES ('$username')";
+        $name = $conn->real_escape_string($_POST['username']);
+        $pcash = 5000000;
+
+        // Insert query
+        $sql = "INSERT INTO accounts (Pname, Pcash, column3, column4) VALUES ('$name', $pcash, 0, 0)";
+
         if ($conn->query($sql) === TRUE) {
-            echo '<p>Nama berhasil ditambahkan ke database.</p>';
+            echo "<script>alert('New record created successfully');</script>";
         } else {
-            echo '<p>Error: ' . $sql . '<br>' . $conn->error . '</p>';
+            echo "<script>alert('Error: " . $sql . "<br>" . $conn->error . "');</script>";
         }
 
-        // Close connection
         $conn->close();
     }
     ?>
