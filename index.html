@@ -2,116 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Masukkan Nama - Pterodactyl API</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REQ WHITELIST KAMPUNG ROLEPLAY</title>
     <style>
-        body {
-            background-color: #1a1a1a;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            overflow: hidden;
         }
-        h1 {
-            color: #ffcc00;
+        .video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            margin: 20px;
         }
         form {
-            background-color: #333333;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: inline-block;
             padding: 20px;
             border-radius: 10px;
-            display: inline-block;
         }
-        label, input {
-            display: block;
-            margin: 10px 0;
-        }
-        input[type="text"] {
+        input[type="text"], button {
             padding: 10px;
-            border: none;
+            margin: 10px;
             border-radius: 5px;
-            width: 200px;
+            border: none;
+            font-size: 16px;
         }
         button {
-            background-color: #ffcc00;
-            color: #1a1a1a;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
             cursor: pointer;
         }
         button:hover {
-            background-color: #e6b800;
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
-    <h1>Masukkan Nama Anda</h1>
-    <form id="nameForm">
+
+<video autoplay muted loop class="video-background">
+    <source src="https://youtu.be/L_z__n98GKY?si=uJG8E1b_Jbm5lWlm" type="video/mp4">
+</video>
+
+<div class="content">
+    <h1>REQ WHITELIST KAMPUNG ROLEPLAY</h1>
+    <form id="whitelistForm">
         <label for="username">Nama:</label>
         <input type="text" id="username" name="username" required>
-        <button type="submit">Submit</button>
+        <button type="submit">OK</button>
     </form>
+</div>
 
-    <script>
-        document.getElementById('nameForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value;
+<script>
+    document.getElementById('whitelistForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
 
-            fetch('index.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username: username }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+        fetch('submit.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    </script>
+    });
+</script>
 
-    <?php
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $input = json_decode(file_get_contents('php://input'), true);
-        $username = $input['username'];
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $username = $input['username'];
 
-        $api_url = 'https://digimon.cloud.kapakhost.my.id/api/client/servers/5563a606/files#/home/container/scriptfiles/whitelist';
-        $api_key = 'ptlc_p9emf3fbaEbmXWStU0fVbwtjGvciyzWK6y4aY7P6Dgh'; // Ganti dengan API key Pterodactyl Anda
+    // Database credentials
+    $servername = "localhost";
+    $dbname = "s2487585_db1722487655342";
+    $username_db = "u2487585_Rh5Ee3XNfF";
+    $password_db = "sKQPT4hgYAqMI^+3RI+OW@Be";
 
-        $filename = /home/container/scriptfiles/whitelist/' . $username . '.txt';
-        $content = $username;
+    // Create connection
+    $conn = new mysqli($servername, $username_db, $password_db, $dbname);
 
-        $data = [
-            'root' => '/',
-            'file' => $filename,
-            'content' => base64_encode($content)
-        ];
-
-        $ch = curl_init($api_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Authorization: Bearer ' . $api_key,
-            'Content-Type: application/json',
-            'Accept: application/json',
-        ]);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-        $response = curl_exec($ch);
-        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($http_code === 200) {
-            echo json_encode(['message' => 'Nama berhasil ditambahkan ke whitelist.']);
-        } else {
-            echo json_encode(['message' => 'Gagal menambahkan nama ke whitelist.', 'response' => $response]);
-        }
-    } else {
-        echo json_encode(['message' => 'Metode request tidak valid.']);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
-    ?>
+
+    // Insert username into database
+    $sql = "INSERT INTO accounts (pid, Pname, password, plogin, pcash, column6, column7) VALUES (NULL, ?, '0', '0', '50000000', '', '')";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $username);
+
+    if ($stmt->execute() === TRUE) {
+        echo json_encode(['message' => 'Nama berhasil ditambahkan ke database.']);
+    } else {
+        echo json_encode(['message' => 'Gagal menambahkan nama ke database.', 'error' => $stmt->error]);
+    }
+
+    // Close connection
+    $stmt->close();
+    $conn->close();
+} else {
+    echo json_encode(['message' => 'Metode request tidak valid.']);
+}
+?>
 </body>
 </html>
